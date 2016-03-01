@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by jcf on 3/1/2016.
  */
 public class UtilFacebook {
+    //https://developers.facebook.com/docs/facebook-login/permissions
     public static final String TAG = UtilFacebook.class.getSimpleName();
     public static void printHashKey(Context context) {
         try {

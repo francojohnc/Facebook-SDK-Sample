@@ -49,26 +49,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Profile profile = Profile.getCurrentProfile();
             if (profile != null) {
                 //logs
-                Log.d(TAG, "getId:" + profile.getId());
-                Log.d(TAG, "getFirstName:" + profile.getFirstName());
-                Log.d(TAG, "getMiddleName:" + profile.getMiddleName());
-                Log.d(TAG, "getLastName:" + profile.getLastName());
-                Log.d(TAG, "getName:" + profile.getName());
+                Log.e(TAG, "getId:" + profile.getId());
+                Log.e(TAG, "getFirstName:" + profile.getFirstName());
+                Log.e(TAG, "getMiddleName:" + profile.getMiddleName());
+                Log.e(TAG, "getLastName:" + profile.getLastName());
+                Log.e(TAG, "getName:" + profile.getName());
 //                            profile.getProfilePictureUri(400, 400).toString()
             }
             Toast.makeText(MainActivity.this, "Getting other info...", Toast.LENGTH_SHORT).show();
-//            // App code
-//            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-//                    new GraphRequest.GraphJSONObjectCallback() {
-//                        @Override
-//                        public void onCompleted(JSONObject object, GraphResponse response) {
-//                            Log.d(TAG, "object:" + object.toString());
-//                        }
-//                    });
-//            Bundle parameters = new Bundle();
-//            parameters.putString("fields", "id,first_name, last_name, email,gender, user_birthday");
-//            request.setParameters(parameters);
-//            request.executeAsync();
+            getPrivateInfo(loginResult);
+        }
+        private void getPrivateInfo(LoginResult loginResult){
+            // get email
+            //set parameter needs
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,first_name, last_name, email,gender, user_birthday");
+            //pas param to graph request
+            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            Log.e(TAG, "object:" + object.toString());
+                        }
+                    });
+            request.setParameters(parameters);
+            request.executeAsync();
         }
 
         @Override
