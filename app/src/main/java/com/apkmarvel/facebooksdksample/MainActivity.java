@@ -1,5 +1,6 @@
 package com.apkmarvel.facebooksdksample;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,48 +41,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FacebookSdk.sdkInitialize(getApplicationContext());
         //
         callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Profile profile = Profile.getCurrentProfile();
-                        if (profile != null) {
-                            //logs
-                            Log.d(TAG, "getId:" + profile.getId());
-                            Log.d(TAG, "getFirstName:" + profile.getFirstName());
-                            Log.d(TAG, "getMiddleName:" + profile.getMiddleName());
-                            Log.d(TAG, "getLastName:" + profile.getLastName());
-                            Log.d(TAG, "getName:" + profile.getName());
-//                            profile.getProfilePictureUri(400, 400).toString()
-                        }
-                        Toast.makeText(MainActivity.this, "Getting other info...", Toast.LENGTH_SHORT).show();
-                        // App code
-                        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                                new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject object, GraphResponse response) {
-                                        Log.d(TAG, "object:" + object.toString());
-                                    }
-                                });
-                        Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,first_name, last_name, email,gender, user_birthday");
-                        request.setParameters(parameters);
-                        request.executeAsync();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Toast.makeText(getApplicationContext(), "onCancel", Toast.LENGTH_SHORT).show();
-                        LoginManager.getInstance().logOut();
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        Toast.makeText(getApplicationContext(), "onError:" + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        LoginManager.getInstance().registerCallback(callbackManager, loginResult);
     }
+    private FacebookCallback<LoginResult> loginResult =  new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            Profile profile = Profile.getCurrentProfile();
+            if (profile != null) {
+                //logs
+                Log.d(TAG, "getId:" + profile.getId());
+                Log.d(TAG, "getFirstName:" + profile.getFirstName());
+                Log.d(TAG, "getMiddleName:" + profile.getMiddleName());
+                Log.d(TAG, "getLastName:" + profile.getLastName());
+                Log.d(TAG, "getName:" + profile.getName());
+//                            profile.getProfilePictureUri(400, 400).toString()
+            }
+            Toast.makeText(MainActivity.this, "Getting other info...", Toast.LENGTH_SHORT).show();
+//            // App code
+//            GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+//                    new GraphRequest.GraphJSONObjectCallback() {
+//                        @Override
+//                        public void onCompleted(JSONObject object, GraphResponse response) {
+//                            Log.d(TAG, "object:" + object.toString());
+//                        }
+//                    });
+//            Bundle parameters = new Bundle();
+//            parameters.putString("fields", "id,first_name, last_name, email,gender, user_birthday");
+//            request.setParameters(parameters);
+//            request.executeAsync();
+        }
 
+        @Override
+        public void onCancel() {
+            Toast.makeText(getApplicationContext(), "onCancel", Toast.LENGTH_SHORT).show();
+            LoginManager.getInstance().logOut();
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            Toast.makeText(getApplicationContext(), "onError:" + error, Toast.LENGTH_SHORT).show();
+        }
+    };
     private void registerListener() {
         btnLogin.setOnClickListener(this);
     }
@@ -99,5 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }
