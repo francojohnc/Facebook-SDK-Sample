@@ -15,6 +15,24 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Login" />
+        <Button
+            android:id="@+id/btnLogOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="LogOut" />
+        <Button
+            android:id="@+id/btnCheckLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="CheckLogin" />
+        <Button
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Share" />
     </LinearLayout>
 
 </RelativeLayout>
