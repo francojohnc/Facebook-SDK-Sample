@@ -1,4 +1,4 @@
-package com.apkmarvel.facebooksdksample.helpers;
+package com.apkmarvel.facebooksdksample.helpers.FacebookApi;
 
 import android.app.Activity;
 
@@ -13,7 +13,9 @@ import java.util.Arrays;
 /**
  * Created by jcf on 3/1/2016.
  */
-public class LoginFB extends FacebookSdk{
+
+//https://developers.facebook.com/docs/facebook-login/permissions
+public class LoginFB extends FBSdk {
     private Activity activity;
     public LoginFB(Activity activity){
         this.activity=activity;

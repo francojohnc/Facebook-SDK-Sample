@@ -8,12 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.apkmarvel.facebooksdksample.helpers.LoginFB;
-import com.apkmarvel.facebooksdksample.helpers.ShareFB;
-import com.apkmarvel.facebooksdksample.utils.UtilFacebook;
+import com.apkmarvel.facebooksdksample.helpers.FacebookApi.FBSdk;
+import com.apkmarvel.facebooksdksample.helpers.FacebookApi.LoginFB;
+import com.apkmarvel.facebooksdksample.helpers.FacebookApi.ShareFB;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
@@ -35,10 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //facebook
+        FBSdk.printHashKey(this);
+        FBSdk.init(this);
+        //
         cast();
         registerListener();
-        UtilFacebook.printHashKey(this);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         //for login
         loginFB = new LoginFB(this);
         loginFB.registerCallback(loginResult);

@@ -1,4 +1,4 @@
-package com.apkmarvel.facebooksdksample.helpers;
+package com.apkmarvel.facebooksdksample.helpers.FacebookApi;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -13,7 +13,7 @@ import com.facebook.share.widget.ShareDialog;
  * Created by JCF on 3/1/2016.
  */
 //https://developers.facebook.com/docs/sharing/android
-public class ShareFB extends FacebookSdk{
+public class ShareFB extends FBSdk {
     private ShareDialog shareDialog;
     public ShareFB(Activity activity){
         shareDialog = new ShareDialog(activity);

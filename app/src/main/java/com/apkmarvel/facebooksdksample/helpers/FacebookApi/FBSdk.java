@@ -1,4 +1,4 @@
-package com.apkmarvel.facebooksdksample.utils;
+package com.apkmarvel.facebooksdksample.helpers.FacebookApi;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -7,17 +7,21 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
-import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by jcf on 3/1/2016.
+ * Created by JCF on 3/1/2016.
  */
-public class UtilFacebook {
-    //https://developers.facebook.com/docs/facebook-login/permissions
-    public static final String TAG = UtilFacebook.class.getSimpleName();
+public abstract class FBSdk {
+    public static final String TAG = FBSdk.class.getSimpleName();
+    public CallbackManager getCallbackManager() {
+        return callbackManager;
+    }
+    protected CallbackManager callbackManager;
     public static void printHashKey(Context context) {
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
@@ -31,8 +35,7 @@ public class UtilFacebook {
         } catch (NoSuchAlgorithmException e) {
         }
     }
-    public static boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null;
+    public static  void init(Context context){
+        FacebookSdk.sdkInitialize(context);
     }
 }
