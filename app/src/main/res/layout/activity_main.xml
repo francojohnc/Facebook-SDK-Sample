@@ -32,7 +32,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Share" />
+            android:text="Share Link" />
+        <Button
+            android:id="@+id/btnSharePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Share Photo" />
     </LinearLayout>
 
 </RelativeLayout>

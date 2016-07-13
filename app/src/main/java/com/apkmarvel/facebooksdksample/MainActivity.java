@@ -1,8 +1,10 @@
 package com.apkmarvel.facebooksdksample;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 import com.apkmarvel.facebooksdksample.helpers.FacebookApi.FBSdk;
 import com.apkmarvel.facebooksdksample.helpers.FacebookApi.LoginFB;
 import com.apkmarvel.facebooksdksample.helpers.FacebookApi.ShareFB;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
@@ -18,9 +22,16 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.share.ShareApi;
 import com.facebook.share.Sharer;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -30,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnShare;
     private ShareFB shareFB;
     private LoginFB loginFB;
+
+    private CallbackManager callbackManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //for share
         shareFB = new ShareFB(this);
         shareFB.registerCallback(shareResult);
+
+        canPresentShareDialogWithPhotos = ShareDialog.canShow(SharePhotoContent.class);
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(
+                callbackManager,
+                shareResult);
+
     }
 
     private FacebookCallback<Sharer.Result> shareResult = new FacebookCallback<Sharer.Result>() {
@@ -120,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnCheckLogin = (Button) findViewById(R.id.btnCheckLogin);
         btnLogOut = (Button) findViewById(R.id.btnLogOut);
         btnShare = (Button) findViewById(R.id.btnShare);
+        findViewById(R.id.btnSharePhoto).setOnClickListener(this);
     }
 
     @Override
@@ -139,10 +161,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnShare:
                 String title = "Hello Facebook";
                 String description = "The 'Hello Facebook' sample  showcases simple Facebook integration";
-                String url = "http://developers.facebook.com/android";
+                String url = "http://dev5.mobext.ph/test/share.html";
                 shareFB.shareLink(title, description, url);
                 break;
+            case R.id.btnSharePhoto:
+                postPhoto();
+                break;
         }
+
+
+    }
+    private static final String PERMISSION = "publish_actions";
+    private boolean canPresentShareDialogWithPhotos;
+    private ShareDialog shareDialog;
+    private PendingAction pendingAction = PendingAction.NONE;
+    private void postPhoto() {
+        Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher);
+        SharePhoto sharePhoto = new SharePhoto.Builder().setBitmap(image).build();
+        ArrayList<SharePhoto> photos = new ArrayList<>();
+        photos.add(sharePhoto);
+        SharePhotoContent sharePhotoContent =new SharePhotoContent.Builder().setPhotos(photos).build();
+        if (canPresentShareDialogWithPhotos) {
+            shareDialog.show(sharePhotoContent);
+        } else if (hasPublishPermission()) {
+            ShareApi.share(sharePhotoContent, shareResult);
+        } else {
+            pendingAction = PendingAction.POST_PHOTO;
+            LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList(PERMISSION));
+        }
+    }
+    private enum PendingAction {
+        NONE,
+        POST_PHOTO,
+        POST_STATUS_UPDATE
+    }
+    private boolean hasPublishPermission() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null && accessToken.getPermissions().contains("publish_actions");
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -26,6 +26,10 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
+        <!--facebook share-->
+        <provider android:authorities="com.facebook.app.FacebookContentProvider746117462197495"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
